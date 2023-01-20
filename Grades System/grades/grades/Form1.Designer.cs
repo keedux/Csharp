@@ -42,6 +42,9 @@ namespace grades
             this.paper1lbl = new System.Windows.Forms.Label();
             this.paper2lbl = new System.Windows.Forms.Label();
             this.recordclearbtn = new System.Windows.Forms.Button();
+            this.deletedbt = new System.Windows.Forms.Button();
+            this.updatebtn = new System.Windows.Forms.Button();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // addbtn
@@ -56,7 +59,7 @@ namespace grades
             // 
             // viewbtn
             // 
-            this.viewbtn.Location = new System.Drawing.Point(12, 102);
+            this.viewbtn.Location = new System.Drawing.Point(12, 83);
             this.viewbtn.Name = "viewbtn";
             this.viewbtn.Size = new System.Drawing.Size(118, 47);
             this.viewbtn.TabIndex = 1;
@@ -66,7 +69,7 @@ namespace grades
             // 
             // connectbtn
             // 
-            this.connectbtn.Location = new System.Drawing.Point(12, 181);
+            this.connectbtn.Location = new System.Drawing.Point(12, 139);
             this.connectbtn.Name = "connectbtn";
             this.connectbtn.Size = new System.Drawing.Size(118, 47);
             this.connectbtn.TabIndex = 2;
@@ -76,7 +79,7 @@ namespace grades
             // 
             // exitbtn
             // 
-            this.exitbtn.Location = new System.Drawing.Point(12, 260);
+            this.exitbtn.Location = new System.Drawing.Point(12, 298);
             this.exitbtn.Name = "exitbtn";
             this.exitbtn.Size = new System.Drawing.Size(118, 47);
             this.exitbtn.TabIndex = 3;
@@ -173,11 +176,43 @@ namespace grades
             this.recordclearbtn.Visible = false;
             this.recordclearbtn.Click += new System.EventHandler(this.recordclearbtn_Click);
             // 
+            // deletedbt
+            // 
+            this.deletedbt.Location = new System.Drawing.Point(12, 192);
+            this.deletedbt.Name = "deletedbt";
+            this.deletedbt.Size = new System.Drawing.Size(118, 47);
+            this.deletedbt.TabIndex = 13;
+            this.deletedbt.Text = "Delete Record";
+            this.deletedbt.UseVisualStyleBackColor = true;
+            this.deletedbt.Click += new System.EventHandler(this.deletedbt_Click);
+            // 
+            // updatebtn
+            // 
+            this.updatebtn.Location = new System.Drawing.Point(12, 245);
+            this.updatebtn.Name = "updatebtn";
+            this.updatebtn.Size = new System.Drawing.Size(118, 47);
+            this.updatebtn.TabIndex = 14;
+            this.updatebtn.Text = "Update Record";
+            this.updatebtn.UseVisualStyleBackColor = true;
+            this.updatebtn.Click += new System.EventHandler(this.updatebtn_Click);
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Location = new System.Drawing.Point(477, 245);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(121, 21);
+            this.comboBox1.TabIndex = 15;
+            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.comboBox1);
+            this.Controls.Add(this.updatebtn);
+            this.Controls.Add(this.deletedbt);
             this.Controls.Add(this.recordclearbtn);
             this.Controls.Add(this.paper2lbl);
             this.Controls.Add(this.paper1lbl);
@@ -213,6 +248,9 @@ namespace grades
         private System.Windows.Forms.Label paper1lbl;
         private System.Windows.Forms.Label paper2lbl;
         private System.Windows.Forms.Button recordclearbtn;
+        private System.Windows.Forms.Button deletedbt;
+        private System.Windows.Forms.Button updatebtn;
+        private System.Windows.Forms.ComboBox comboBox1;
     }
 }
 

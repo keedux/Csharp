@@ -98,3 +98,10 @@ C:\Users\s242534.CENTRALSUSSEX\OneDrive - Chichester College Group\GitHub\Csharp
 C:\Users\s242534.CENTRALSUSSEX\OneDrive - Chichester College Group\GitHub\Csharp\Csharp\Grades System\grades\grades\bin\Debug\System.Numerics.Vectors.xml
 C:\Users\s242534.CENTRALSUSSEX\OneDrive - Chichester College Group\GitHub\Csharp\Csharp\Grades System\grades\grades\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
 C:\Users\s242534.CENTRALSUSSEX\OneDrive - Chichester College Group\GitHub\Csharp\Csharp\Grades System\grades\grades\obj\Debug\grades.csproj.CopyComplete
+C:\Users\s242534.CENTRALSUSSEX\OneDrive - Chichester College Group\Csharp\Grades System\grades\grades\obj\Debug\grades.csproj.AssemblyReference.cache
+C:\Users\s242534.CENTRALSUSSEX\OneDrive - Chichester College Group\Csharp\Grades System\grades\grades\obj\Debug\grades.Form1.resources
+C:\Users\s242534.CENTRALSUSSEX\OneDrive - Chichester College Group\Csharp\Grades System\grades\grades\obj\Debug\grades.Properties.Resources.resources
+C:\Users\s242534.CENTRALSUSSEX\OneDrive - Chichester College Group\Csharp\Grades System\grades\grades\obj\Debug\grades.csproj.GenerateResource.cache
+C:\Users\s242534.CENTRALSUSSEX\OneDrive - Chichester College Group\Csharp\Grades System\grades\grades\obj\Debug\grades.csproj.CoreCompileInputs.cache
+C:\Users\s242534.CENTRALSUSSEX\OneDrive - Chichester College Group\Csharp\Grades System\grades\grades\obj\Debug\grades.exe
+C:\Users\s242534.CENTRALSUSSEX\OneDrive - Chichester College Group\Csharp\Grades System\grades\grades\obj\Debug\grades.pdb

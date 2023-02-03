@@ -44,7 +44,6 @@ namespace grades
             this.recordclearbtn = new System.Windows.Forms.Button();
             this.deletedbt = new System.Windows.Forms.Button();
             this.updatebtn = new System.Windows.Forms.Button();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // addbtn
@@ -89,7 +88,6 @@ namespace grades
             // 
             // recordviewer
             // 
-            this.recordviewer.Enabled = false;
             this.recordviewer.FormattingEnabled = true;
             this.recordviewer.Location = new System.Drawing.Point(136, 30);
             this.recordviewer.Name = "recordviewer";
@@ -196,21 +194,11 @@ namespace grades
             this.updatebtn.UseVisualStyleBackColor = true;
             this.updatebtn.Click += new System.EventHandler(this.updatebtn_Click);
             // 
-            // comboBox1
-            // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(477, 245);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(121, 21);
-            this.comboBox1.TabIndex = 15;
-            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.updatebtn);
             this.Controls.Add(this.deletedbt);
             this.Controls.Add(this.recordclearbtn);
@@ -250,7 +238,6 @@ namespace grades
         private System.Windows.Forms.Button recordclearbtn;
         private System.Windows.Forms.Button deletedbt;
         private System.Windows.Forms.Button updatebtn;
-        private System.Windows.Forms.ComboBox comboBox1;
     }
 }
 

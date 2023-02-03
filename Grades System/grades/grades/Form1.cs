@@ -18,10 +18,10 @@ namespace grades
         public Form1()
         {
             InitializeComponent();
-            main();
+            
         }
 
-        private static void main()
+        public static MySqlConnection sqlconn()
         {
             string connStr = "server=localhost;user=root;database=grades";
             using (MySqlConnection gradesconn = new MySqlConnection(connStr))
@@ -29,16 +29,13 @@ namespace grades
                 try
                 {
                     gradesconn.Open();
-                    string sql = "CREATE TABLE IF NOT EXISTS tblgrades(candidatenum int, paper1 int, paper2 int, finalgrade char, CONSTRAINT pk_candidatenum PRIMARY KEY(candidatenum))";
-                    using(MySqlCommand cmd = new MySqlCommand(sql, gradesconn))
-                    {
-                        cmd.ExecuteNonQuery();
-                    }                   
+                    Console.WriteLine("Connected");
                 }
                 catch
                 {
-                    MessageBox.Show("Table Failed Creation");
+                    MessageBox.Show("Connection Failed");
                 }
+                return gradesconn;
             }
         }
 
@@ -56,14 +53,13 @@ namespace grades
         private void viewbtn_Click(object sender, EventArgs e)
         {
             recordclearbtn.Visible = true;
-            string connStr = "server=localhost;user=root;database=grades";
-            using (MySqlConnection gradesconn = new MySqlConnection(connStr))
+            
+            try
             {
-                try
-                {
-                    gradesconn.Open();
-                    string sql = "SELECT * FROM tblgrades";
-                    using (MySqlCommand cmd = new MySqlCommand(sql, gradesconn))
+                MySqlConnection connection = sqlconn();
+                connection.Open();
+                string sql = "SELECT * FROM tblgrades";
+                    using (MySqlCommand cmd = new MySqlCommand(sql, connection))
                     {
                        using(MySqlDataReader reader = cmd.ExecuteReader())
                         {
@@ -83,33 +79,11 @@ namespace grades
                 {
                     MessageBox.Show("Failed to retrieve record");
                 }
-            }
         }
 
         private void connectbtn_Click(object sender, EventArgs e)
         {
-            string connStr = "server=localhost;user=root;";
-            using (MySqlConnection gradesconn = new MySqlConnection(connStr))
-            {
-                try
-                {
-                    gradesconn.Open();
-                    if (gradesconn.State == ConnectionState.Open)
-                    {
-                        MessageBox.Show("Connection Successful");
-                    }
-                    string sql = "CREATE DATABASE IF NOT EXISTS grades";
-                    using (MySqlCommand cmd = new MySqlCommand(sql, gradesconn))
-                    {
-                        cmd.ExecuteNonQuery();
-                    }
-                }
-                catch
-                {
-                    MessageBox.Show("Connection Failed");
-                }
-            }
-            
+            sqlconn();
         }
 
         private void exitbtn_Click(object sender, EventArgs e)
@@ -119,13 +93,13 @@ namespace grades
 
         private void recordviewer_SelectedIndexChanged(object sender, EventArgs e)
         {
-
-
+            
         }
 
         private void insertrecord_Click(object sender, EventArgs e)
         {
-            string tblconnection = "server=localhost;user=root;database=grades";
+            MySqlConnection connection = sqlconn();
+            
 
             int tempcandidatenum = int.Parse(candidatenum.Text);
             int tempPaper1 = int.Parse(paper1.Text);
@@ -175,16 +149,14 @@ namespace grades
             }
             Console.WriteLine(total);
 
-            string connStr = tblconnection;
-            MySqlConnection gradesconn = new MySqlConnection(connStr);
-            gradesconn.Open();
-          if (total > 100)
+            connection.Open();
+            if (total > 100)
             {
                 MessageBox.Show("the total for both papers cannot be greater than 100");
                 return;
             }
             string sql = "INSERT INTO tblgrades VALUES (@candidatenum, @paper1, @paper2, @finalgrade)";
-            MySqlCommand cmd = new MySqlCommand(sql, gradesconn);
+            MySqlCommand cmd = new MySqlCommand(sql, connection);
             cmd.Parameters.AddWithValue("@candidatenum", tempcandidatenum);
             cmd.Parameters.AddWithValue("@paper1", tempPaper1);
             cmd.Parameters.AddWithValue("@paper2", tempPaper2);
@@ -207,36 +179,62 @@ namespace grades
 
         private void deletedbt_Click(object sender, EventArgs e)
         {
+            string[] separators = new string[] { ",", ".", "!", "\'", " ", "\'s" };
+            string text = recordviewer.GetItemText(recordviewer.SelectedItem);
+
+            string[] words = text.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+            string wordnew = (words[words.Length - 1]);
+            Console.WriteLine(wordnew);
+
+            MySqlConnection connection = sqlconn();
+            
+                try
+                {
+                    connection.Open();
+                    if(connection.State == ConnectionState.Open)
+                    {
+                    string sql = "DELETE FROM `tblgrades` WHERE `candidatenum` = " + wordnew;
+                    MySqlCommand cmd = new MySqlCommand(sql, connection);
+                    Console.WriteLine(wordnew);
+                    bool valid = false;
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            
+                            if (wordnew == reader["candidatenum"].ToString())
+                            {
+                                valid = true;
+                            }
+                            
+                        }
+                    }
+                    if (valid == true)
+                    {
+                        cmd.ExecuteNonQuery();
+                        MessageBox.Show("Record Deleted!");
+                    }
+                    else
+                    {
+                        MessageBox.Show("Record not exist ig");
+                    }
+
+
+                }
+            }
+                catch
+                {
+                    MessageBox.Show("Record failed to delete");
+                }
+            
+            
 
         }
 
         private void updatebtn_Click(object sender, EventArgs e)
         {
-
+            
         }
 
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            string connStr = "server=localhost; user=root;database=grades";
-            using (MySqlConnection gradesconn = new MySqlConnection(connStr))
-            {
-                try
-                {
-                    gradesconn.Open();
-                    if()
-                    {
-
-                    }
-                    else
-                    {
-
-                    }
-                }
-                catch
-                {
-
-                }
-            }
-        }
     }
 }

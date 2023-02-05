@@ -44,6 +44,9 @@ namespace grades
             this.recordclearbtn = new System.Windows.Forms.Button();
             this.deletedbt = new System.Windows.Forms.Button();
             this.updatebtn = new System.Windows.Forms.Button();
+            this.CandidateDel_lable = new System.Windows.Forms.Label();
+            this.CandidateDel_txtbox = new System.Windows.Forms.TextBox();
+            this.DelRecord_btn = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // addbtn
@@ -194,11 +197,45 @@ namespace grades
             this.updatebtn.UseVisualStyleBackColor = true;
             this.updatebtn.Click += new System.EventHandler(this.updatebtn_Click);
             // 
+            // CandidateDel_lable
+            // 
+            this.CandidateDel_lable.AutoSize = true;
+            this.CandidateDel_lable.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.CandidateDel_lable.Location = new System.Drawing.Point(345, 33);
+            this.CandidateDel_lable.Name = "CandidateDel_lable";
+            this.CandidateDel_lable.Size = new System.Drawing.Size(126, 17);
+            this.CandidateDel_lable.TabIndex = 15;
+            this.CandidateDel_lable.Text = "Candidate Number";
+            this.CandidateDel_lable.Visible = false;
+            // 
+            // CandidateDel_txtbox
+            // 
+            this.CandidateDel_txtbox.Location = new System.Drawing.Point(477, 30);
+            this.CandidateDel_txtbox.Name = "CandidateDel_txtbox";
+            this.CandidateDel_txtbox.Size = new System.Drawing.Size(166, 20);
+            this.CandidateDel_txtbox.TabIndex = 16;
+            this.CandidateDel_txtbox.Visible = false;
+            this.CandidateDel_txtbox.TextChanged += new System.EventHandler(this.CandidateDel_txtbox_TextChanged);
+            // 
+            // DelRecord_btn
+            // 
+            this.DelRecord_btn.Location = new System.Drawing.Point(477, 146);
+            this.DelRecord_btn.Name = "DelRecord_btn";
+            this.DelRecord_btn.Size = new System.Drawing.Size(166, 33);
+            this.DelRecord_btn.TabIndex = 17;
+            this.DelRecord_btn.Text = "Delete Record";
+            this.DelRecord_btn.UseVisualStyleBackColor = true;
+            this.DelRecord_btn.Visible = false;
+            this.DelRecord_btn.Click += new System.EventHandler(this.DelRecord_btn_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.DelRecord_btn);
+            this.Controls.Add(this.CandidateDel_txtbox);
+            this.Controls.Add(this.CandidateDel_lable);
             this.Controls.Add(this.updatebtn);
             this.Controls.Add(this.deletedbt);
             this.Controls.Add(this.recordclearbtn);
@@ -238,6 +275,9 @@ namespace grades
         private System.Windows.Forms.Button recordclearbtn;
         private System.Windows.Forms.Button deletedbt;
         private System.Windows.Forms.Button updatebtn;
+        private System.Windows.Forms.Label CandidateDel_lable;
+        private System.Windows.Forms.TextBox CandidateDel_txtbox;
+        private System.Windows.Forms.Button DelRecord_btn;
     }
 }
 

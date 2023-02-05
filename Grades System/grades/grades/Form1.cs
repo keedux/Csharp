@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using MySql.Data.MySqlClient;
-using Org.BouncyCastle.Bcpg.OpenPgp;
 
 namespace grades
 {
@@ -19,7 +12,11 @@ namespace grades
         {
             InitializeComponent();
             
+            
         }
+        private bool addbtnWasClicked = false;
+        private bool delbtnWasClicked = false;
+
 
         public static MySqlConnection sqlconn()
         {
@@ -48,7 +45,15 @@ namespace grades
             paper1lbl.Visible = true;
             paper2lbl.Visible = true;
             insertrecord.Visible = true;
+            addbtnWasClicked = true;
+            if (delbtnWasClicked == true)
+            {
+                CandidateDel_lable.Visible = false;
+                CandidateDel_txtbox.Visible = false;
+                DelRecord_btn.Visible = false;
+            }
         }
+        
 
         private void viewbtn_Click(object sender, EventArgs e)
         {
@@ -176,25 +181,21 @@ namespace grades
             recordviewer.Items.Clear();
             recordclearbtn.Visible = false;
         }
-
-        private void deletedbt_Click(object sender, EventArgs e)
+        private void CandidateDel_txtbox_TextChanged(object sender, EventArgs e)
         {
-            string[] separators = new string[] { ",", ".", "!", "\'", " ", "\'s" };
-            string text = recordviewer.GetItemText(recordviewer.SelectedItem);
-
-            string[] words = text.Split(separators, StringSplitOptions.RemoveEmptyEntries);
-            string wordnew = (words[words.Length - 1]);
-            Console.WriteLine(wordnew);
-
+            
+        }
+        private void DelRecord_btn_Click(object sender, EventArgs e)
+        {
             MySqlConnection connection = sqlconn();
-
+            
             try
             {
                 connection.Open();
                 if (connection.State == ConnectionState.Open)
                 {
-                    string sql = "SELECT `candidatenum` FROM `tblgrades` WHERE `candidatenum` = " + wordnew;
-                    Console.WriteLine(wordnew);
+                    string sql = "SELECT `candidatenum` FROM `tblgrades` WHERE `candidatenum` = " + CandidateDel_txtbox.Text;
+                    Console.WriteLine(CandidateDel_txtbox.Text);
                     bool valid = false;
 
                     using (MySqlCommand cmd = new MySqlCommand(sql, connection))
@@ -203,19 +204,20 @@ namespace grades
                         {
                             while (reader.Read())
                             {
-                                if (wordnew == reader["candidatenum"].ToString())
+                                if (CandidateDel_txtbox.Text == reader["candidatenum"].ToString())
                                 {
                                     valid = true;
                                 }
                             }
                         }
-
                         if (valid == true)
                         {
-                            sql = "DELETE FROM `tblgrades` WHERE `candidatenum` = " + wordnew;
+                            sql = "DELETE FROM `tblgrades` WHERE `candidatenum` = " + CandidateDel_txtbox.Text;
                             cmd.CommandText = sql;
                             cmd.ExecuteNonQuery();
                             MessageBox.Show("Record Deleted!");
+                            recordviewer.Items.Clear();
+
                         }
                         else
                         {
@@ -229,6 +231,26 @@ namespace grades
                 MessageBox.Show("Record failed to delete.");
             }
         }
+        private void deletedbt_Click(object sender, EventArgs e)
+        {
+            delbtnWasClicked = true;
+            CandidateDel_lable.Visible = true;
+            CandidateDel_txtbox.Visible = true;
+            DelRecord_btn.Visible = true;
+            
+            if (addbtnWasClicked == true)
+            {
+                candidatenum.Visible = false;
+                paper1.Visible = false;
+                paper2.Visible = false;
+                candidatelbl.Visible = false;
+                paper1lbl.Visible = false;
+                paper2lbl.Visible = false;
+                insertrecord.Visible = false;
+                addbtnWasClicked = false;
+            }
+
+        }
 
 
         private void updatebtn_Click(object sender, EventArgs e)
@@ -236,5 +258,6 @@ namespace grades
             
         }
 
+        
     }
 }

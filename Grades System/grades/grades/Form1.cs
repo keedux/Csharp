@@ -187,49 +187,49 @@ namespace grades
             Console.WriteLine(wordnew);
 
             MySqlConnection connection = sqlconn();
-            
-                try
+
+            try
+            {
+                connection.Open();
+                if (connection.State == ConnectionState.Open)
                 {
-                    connection.Open();
-                    if(connection.State == ConnectionState.Open)
-                    {
-                    string sql = "DELETE FROM `tblgrades` WHERE `candidatenum` = " + wordnew;
-                    MySqlCommand cmd = new MySqlCommand(sql, connection);
+                    string sql = "SELECT `candidatenum` FROM `tblgrades` WHERE `candidatenum` = " + wordnew;
                     Console.WriteLine(wordnew);
                     bool valid = false;
-                    using (MySqlDataReader reader = cmd.ExecuteReader())
+
+                    using (MySqlCommand cmd = new MySqlCommand(sql, connection))
                     {
-                        while (reader.Read())
+                        using (MySqlDataReader reader = cmd.ExecuteReader())
                         {
-                            
-                            if (wordnew == reader["candidatenum"].ToString())
+                            while (reader.Read())
                             {
-                                valid = true;
+                                if (wordnew == reader["candidatenum"].ToString())
+                                {
+                                    valid = true;
+                                }
                             }
-                            
+                        }
+
+                        if (valid == true)
+                        {
+                            sql = "DELETE FROM `tblgrades` WHERE `candidatenum` = " + wordnew;
+                            cmd.CommandText = sql;
+                            cmd.ExecuteNonQuery();
+                            MessageBox.Show("Record Deleted!");
+                        }
+                        else
+                        {
+                            MessageBox.Show("Record not found.");
                         }
                     }
-                    if (valid == true)
-                    {
-                        cmd.ExecuteNonQuery();
-                        MessageBox.Show("Record Deleted!");
-                    }
-                    else
-                    {
-                        MessageBox.Show("Record not exist ig");
-                    }
-
-
                 }
             }
-                catch
-                {
-                    MessageBox.Show("Record failed to delete");
-                }
-            
-            
-
+            catch
+            {
+                MessageBox.Show("Record failed to delete.");
+            }
         }
+
 
         private void updatebtn_Click(object sender, EventArgs e)
         {

@@ -1,15 +1,26 @@
-import mysql.connector
-mydb = mysql.connector.connect(
-    host = "localhost",
-    user = "root",
-    password = "",
-)
+import time
+def write_config(host, username, password, database):
+    config = {
+        'host': host,
+        'username': username,
+        'password': password,
+        'database': database
+    }
+    with open("config.txt", 'w') as file:
+        for key, value in config.items():
+            file.write(f"{key}={value}\n")
 
-mycursor = mydb.cursor()
-mycursor.execute("CREATE DATABASE IF NOT EXISTS grades")
-print("Database Created")
+if __name__ == '__main__':
+    host = input("Enter host: ")
+    username = input("Enter username: ")
+    password = input("Enter password: ")
+    database = input("Enter database: ")
+    write_config(host, username, password, database)
+print("")
+print("--------------------------------------------------")
+print("config created. please restart Grades Application")
+print("--------------------------------------------------")
 
-mycursor.execute("USE grades")
-mycursor.execute("CREATE TABLE IF NOT EXISTS tblgrades(candidatenum int, paper1 int, paper2 int, finalgrade char, CONSTRAINT pk_candidatenum PRIMARY KEY(candidatenum))")
-print("Table Created")
+print("")
 
+time.sleep(3)

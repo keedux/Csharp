@@ -2,25 +2,65 @@
 using System;
 using System.Data;
 using System.Windows.Forms;
+using System.Diagnostics;
+using System.IO;
+
+using static System.Net.Mime.MediaTypeNames;
 
 namespace grades
 {
 
     public partial class Form1 : Form
     {
-        public Form1()
-        {
-            InitializeComponent();
-            
-            
-        }
         private bool addbtnWasClicked = false;
         private bool delbtnWasClicked = false;
-
-
-        public static MySqlConnection sqlconn()
+        private string host;
+        private string username;
+        private string password;
+        private string database;
+        public Form1()
         {
-            string connStr = "server=localhost;user=root;database=grades";
+            ReadConfig();
+            InitializeComponent();
+            
+        }
+        
+        private void ReadConfig()
+        {
+            if (File.Exists("config.txt")){
+                string[] lines = File.ReadAllLines("config.txt");
+                foreach (string line in lines)
+                {
+                    if (line.StartsWith("host="))
+                    {
+                        host = line.Substring(5);
+
+                    }
+                    else if (line.StartsWith("username="))
+                    {
+                        username = line.Substring(9);
+                    }
+                    else if (line.StartsWith("password="))
+                    {
+                        password = line.Substring(9);
+                    }
+                    else if (line.StartsWith("database="))
+                    {
+                        database = line.Substring(9);
+                    }
+                }
+            }
+            else
+            {
+                Process.Start("C:/Users/keedu/OneDrive - Chichester College Group/Csharp/Grades System/grades/config.py");
+                Environment.Exit(0);
+            }
+        }
+
+        public MySqlConnection sqlconn()
+        {
+            string connStr = $"server={host};user={username};password={password};database={database};";
+            Console.WriteLine(connStr);
             using (MySqlConnection gradesconn = new MySqlConnection(connStr))
             {
                 try
@@ -216,7 +256,7 @@ namespace grades
                             cmd.CommandText = sql;
                             cmd.ExecuteNonQuery();
                             MessageBox.Show("Record Deleted!");
-                            recordviewer.Items.Clear();
+                                        recordviewer.Items.Clear();
 
                         }
                         else

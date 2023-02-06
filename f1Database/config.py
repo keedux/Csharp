@@ -1,4 +1,5 @@
 import time
+import mysql.connector
 def write_config(host, username, password, database):
     config = {
         'host': host,
@@ -16,6 +17,15 @@ if __name__ == '__main__':
     password = input("Enter password: ")
     database = input("Enter database: ")
     write_config(host, username, password, database)
+    mydb = mysql.connector.connect(
+    host=host,
+    user=username,
+    password=password
+    )
+
+    mycursor = mydb.cursor()
+
+    mycursor.execute("CREATE DATABASE IF NOT EXISTS " + database)
 else:
     print("Failed to make config.txt")
     time.sleep(3)

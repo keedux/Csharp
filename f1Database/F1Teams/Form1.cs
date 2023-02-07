@@ -109,7 +109,7 @@ namespace F1Teams
                 }
             }
             // Create Second table
-            string query2 = "CREATE TABLE IF NOT EXISTS f1drivers(id int, driver varchar(25), CONSTRAINT pk_id PRIMARY KEY(id))";
+            string query2 = "CREATE TABLE IF NOT EXISTS f1drivers(id int, driver varchar(25), teamid int, CONSTRAINT pk_id PRIMARY KEY(id))";
             using (MySqlCommand command = new MySqlCommand(query2, f1conn))
             {
                 try
@@ -147,17 +147,89 @@ namespace F1Teams
 
         private void ViewRec_btn_Click(object sender, EventArgs e)
         {
-            foreach (KeyValuePair<string, int> driver in drivers)
+            //foreach (KeyValuePair<string, int> driver in drivers)
+            //{
+            //    foreach (KeyValuePair<string, int> team in teams)
+            //    {
+            //        if (driver.Value == team.Value)
+            //        {
+            //            Console.WriteLine(driver.Key + " - " + team.Key);
+            //            break;
+            //        }
+            //    }
+            //}
+            MySqlConnection f1conn = sqlconn();
+            f1conn.Open();
+            foreach (KeyValuePair<string, int> team in teams)
             {
-                foreach (KeyValuePair<string, int> team in teams)
+                try
                 {
-                    if (driver.Value == team.Value)
+                    bool teamExists = false;
+                    using (MySqlCommand selectCommand = new MySqlCommand("SELECT * FROM f1teams WHERE team = @teamname", f1conn))
                     {
-                        Console.WriteLine(driver.Key + " - " + team.Key);
-                        break;
+                        selectCommand.Parameters.AddWithValue("@teamname", team.Key);
+                        using (MySqlDataReader reader = selectCommand.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                teamExists = true;
+                            }
+                        }
+                    }
+
+                    if (!teamExists)
+                    {
+                        using (MySqlCommand insertCommand = new MySqlCommand("INSERT INTO f1teams(id, team) VALUES(@teamid, @teamname)", f1conn))
+                        {
+                            insertCommand.Parameters.AddWithValue("@teamid", team.Value);
+                            insertCommand.Parameters.AddWithValue("@teamname", team.Key);
+                            insertCommand.ExecuteNonQuery();
+                        }
                     }
                 }
+                catch (MySqlException ex)
+                {
+                    Console.WriteLine("Error: " + ex.Message);
+                }
             }
+
+
+            int driverNumber = 1;
+            foreach (KeyValuePair<string, int> driver in drivers)
+            {
+                try
+                {
+                    bool alreadyExists = false;
+                    using (MySqlCommand selectCommand = new MySqlCommand("SELECT * FROM f1drivers WHERE driver = @drivername", f1conn))
+                    {
+                        selectCommand.Parameters.AddWithValue("@drivername", driver.Key);
+                        using (MySqlDataReader reader = selectCommand.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                alreadyExists = true;
+                            }
+                        }
+                    }
+
+                    if (!alreadyExists)
+                    {
+                        using (MySqlCommand insertCommand = new MySqlCommand("INSERT INTO f1drivers(id, driver, teamid) VALUES(@driverid, @drivername, @teamid)", f1conn))
+                        {
+                            insertCommand.Parameters.AddWithValue("@driverid", driverNumber);
+                            insertCommand.Parameters.AddWithValue("@drivername", driver.Key);
+                            insertCommand.Parameters.AddWithValue("@teamid", driver.Value);
+                            insertCommand.ExecuteNonQuery();
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error: " + ex.Message);
+                }
+                driverNumber++;
+            }
+
         }
 
 

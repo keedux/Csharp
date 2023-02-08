@@ -10,6 +10,8 @@ using System.Windows.Forms;
 using MySql.Data.MySqlClient;
 using System.Diagnostics;
 using System.IO;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using System.Data.SqlClient;
 
 namespace F1Teams
 {
@@ -31,14 +33,25 @@ namespace F1Teams
 { "Pierre Galsy", 7 }, { "Esteban Ocon", 7 }, // Alpine Drivers
 { "Oscar Piestri", 8 }, {"Lando Norris", 8 }, // Mclaren Drivers
 { "Valtteri Bottas", 9 }, { "Guanyu Zhou",  9 }, // Alfa Romeo Drivers
-{ "Alexander Albon", 10 }, { "Logan Sargeant", 10 } // Williams Drivers
+{ "Alexander Albon", 10 }, { "Logan Sargeant", 10 }, // Williams Drivers
+
 };
+        
+
+
 
         public MainMenu()
         {
             ReadConfig();
             dbcreation();
+            sqlAutoUpdate();
+            dictInserts();
             InitializeComponent();
+            comboBox1.DropDownStyle = ComboBoxStyle.DropDownList;
+            foreach (KeyValuePair<string, int> driver in drivers)
+            {
+                comboBox1.Items.Add(driver.Key);
+            }
         }
         private void ReadConfig()
         {
@@ -93,7 +106,7 @@ namespace F1Teams
             MySqlConnection f1conn = sqlconn();
             
             // Create first table
-            string query1 = "CREATE TABLE IF NOT EXISTS f1teams(id int, team varchar(25), CONSTRAINT pk_id PRIMARY KEY(id))";
+            string query1 = "CREATE TABLE IF NOT EXISTS f1teams(id int, team varchar(25), constructorpoints int DEFAULT 0, CONSTRAINT pk_id PRIMARY KEY(id));";
             using (MySqlCommand command = new MySqlCommand(query1, f1conn))
             {
                 f1conn.Open();
@@ -109,7 +122,7 @@ namespace F1Teams
                 }
             }
             // Create Second table
-            string query2 = "CREATE TABLE IF NOT EXISTS f1drivers(id int, driver varchar(25), teamid int, CONSTRAINT pk_id PRIMARY KEY(id))";
+            string query2 = "CREATE TABLE IF NOT EXISTS f1drivers(id int, driver varchar(25), teamid int, driverpoints int DEFAULT 0, CONSTRAINT pk_id PRIMARY KEY(id))";
             using (MySqlCommand command = new MySqlCommand(query2, f1conn))
             {
                 try
@@ -137,27 +150,8 @@ namespace F1Teams
                 }
             }
         }
-
-        private void TestConn_btn_Click(object sender, EventArgs e)
+        private void dictInserts()
         {
-            MySqlConnection f1conn = sqlconn();
-            f1conn.Open();
-            
-        }
-
-        private void ViewRec_btn_Click(object sender, EventArgs e)
-        {
-            //foreach (KeyValuePair<string, int> driver in drivers)
-            //{
-            //    foreach (KeyValuePair<string, int> team in teams)
-            //    {
-            //        if (driver.Value == team.Value)
-            //        {
-            //            Console.WriteLine(driver.Key + " - " + team.Key);
-            //            break;
-            //        }
-            //    }
-            //}
             MySqlConnection f1conn = sqlconn();
             f1conn.Open();
             foreach (KeyValuePair<string, int> team in teams)
@@ -229,18 +223,134 @@ namespace F1Teams
                 }
                 driverNumber++;
             }
+        }
+        private void sqlAutoUpdate()
+        {
+            MySqlConnection f1conn = sqlconn();
+            f1conn.Open();
+            string f1table = "INSERT INTO f1table(id, drivers, team, driverpoints, constructorpoints) SELECT f1drivers.id, f1drivers.driver, f1teams.team, 0 as driverpoints, 0 as constructorpoints FROM f1teams, f1drivers WHERE f1teams.id = f1drivers.teamid ORDER BY f1drivers.id ON DUPLICATE KEY UPDATE drivers = VALUES(drivers), team = VALUES(team), driverpoints = VALUES(driverpoints), constructorpoints = VALUES(constructorpoints)";
+            try
+            {
+                using (MySqlCommand command = new MySqlCommand(f1table, f1conn))
+                {
+                    command.ExecuteNonQuery();
+                    Console.WriteLine("f1Table Updated");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+            }
+        }
+        private void TestConn_btn_Click(object sender, EventArgs e)
+        {
+            MySqlConnection f1conn = sqlconn();
+            f1conn.Open();
+            sqlAutoUpdate();
+
+        }
+
+        private void ViewRec_btn_Click(object sender, EventArgs e)
+        {
+
+            try
+            {
+                MySqlConnection connection = sqlconn();
+                connection.Open();
+                string sql = "SELECT * FROM f1table";
+                using (MySqlCommand cmd = new MySqlCommand(sql, connection))
+                {
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            RecViewer.Items.Add("==================");
+                            RecViewer.Items.Add("Driver: " + reader["drivers"]);
+                            RecViewer.Items.Add("Team: " + reader["team"]);
+                            RecViewer.Items.Add("Driver Points: " + reader["driverpoints"]);
+                            RecViewer.Items.Add("Constructor Points: " + reader["constructorpoints"]);
+                            RecViewer.Items.Add("==================");
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Failed to retrieve record");
+            }
+
 
         }
 
 
         private void AddRec_btn_Click(object sender, EventArgs e)
         {
+            MySqlConnection f1conn = sqlconn();
+            f1conn.Open();
 
+
+
+            using (MySqlCommand command = new MySqlCommand("UPDATE f1drivers SET driverpoints = driverpoints + @points WHERE f1drivers.driver = @driver", f1conn))
+            {
+                command.Parameters.AddWithValue("@points", textBox1.Text);
+                command.Parameters.AddWithValue("@driver", comboBox1.Text);
+
+                command.ExecuteNonQuery();
+                Console.WriteLine("Driver Points Updated");
+            }
+
+
+
+            Console.WriteLine(comboBox1.Text);
+            Console.WriteLine(textBox1.Text);
+            string updateDriverPoints = "UPDATE f1table SET driverpoints = (SELECT driverpoints FROM f1drivers WHERE f1drivers.driver = f1table.drivers)";
+            try
+            {
+                using (MySqlCommand command = new MySqlCommand(updateDriverPoints, f1conn))
+                {
+                    command.ExecuteNonQuery();
+                    Console.WriteLine("Driver Points Updated");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+            }
+            string updateConstructorPoints = "UPDATE f1teams SET constructorpoints = (SELECT SUM(driverpoints) FROM f1drivers WHERE f1drivers.teamid = f1teams.id)";
+            try
+            {
+                using (MySqlCommand command = new MySqlCommand(updateConstructorPoints, f1conn))
+                {
+                    command.ExecuteNonQuery();
+                    Console.WriteLine("Constructor points updated");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+            }
+            string tableConstructorPoints = "UPDATE f1table SET constructorpoints = (SELECT constructorpoints FROM f1teams WHERE f1teams.team = f1table.team)";
+            try
+            {
+                using (MySqlCommand command = new MySqlCommand(tableConstructorPoints, f1conn))
+                {
+                    command.ExecuteNonQuery();
+                    Console.WriteLine("f1table Constructor Points Updated");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+            }
         }
 
         private void Exit_btn_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
         }
     }
 }

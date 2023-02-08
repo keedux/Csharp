@@ -34,6 +34,8 @@ namespace F1Teams
             this.AddRec_btn = new System.Windows.Forms.Button();
             this.Exit_btn = new System.Windows.Forms.Button();
             this.RecViewer = new System.Windows.Forms.ListBox();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // TestConn_btn
@@ -83,16 +85,34 @@ namespace F1Teams
             // RecViewer
             // 
             this.RecViewer.FormattingEnabled = true;
-            this.RecViewer.Location = new System.Drawing.Point(178, 54);
+            this.RecViewer.Location = new System.Drawing.Point(178, 2);
             this.RecViewer.Name = "RecViewer";
-            this.RecViewer.Size = new System.Drawing.Size(204, 212);
+            this.RecViewer.Size = new System.Drawing.Size(204, 446);
             this.RecViewer.TabIndex = 4;
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Location = new System.Drawing.Point(475, 326);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(121, 21);
+            this.comboBox1.TabIndex = 5;
+            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(475, 246);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(121, 20);
+            this.textBox1.TabIndex = 6;
             // 
             // MainMenu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.RecViewer);
             this.Controls.Add(this.Exit_btn);
             this.Controls.Add(this.AddRec_btn);
@@ -112,6 +132,8 @@ namespace F1Teams
         private System.Windows.Forms.Button AddRec_btn;
         private System.Windows.Forms.Button Exit_btn;
         private System.Windows.Forms.ListBox RecViewer;
+        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.TextBox textBox1;
     }
 }
 
